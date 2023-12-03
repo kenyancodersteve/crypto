@@ -1,0 +1,26 @@
+<header>
+    <%- include('header') %>
+</header>
+
+<main>
+   
+    <!-- Your main content goes here -->
+    <div class="login two"> <h1>Welcome to <%= title %></h1></div>
+    
+    <form action="http://localhost:3001/finance" method="post" class="signup">
+        <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Start Clearance">
+          </div>
+        </form>
+        <ul>
+            <% result.forEach(function(number) { %>
+              <li><%= number %></li>
+            <% }); %>
+          </ul>
+
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

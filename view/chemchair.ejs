@@ -1,0 +1,23 @@
+<header>
+    <%- include('header') %>
+</header>
+
+<main>
+   
+    <!-- Your main content goes here -->
+    <div class="login two"> <h1>Welcome to <%= title %></h1></div>
+    
+    <form action="http://localhost:3001/chemdept" method="post" class="signup">
+        <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Start Clearance">
+          </div>
+        </form>
+       
+        <div class="login two"> <h1> <%= result %></h1></div>
+
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

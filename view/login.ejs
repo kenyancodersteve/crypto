@@ -1,0 +1,97 @@
+<header>
+    <%- include('header') %>
+</header>
+
+<main>
+   
+    <!-- Your main content goes here -->
+    <div class="login two"> <h1>Welcome to <%= title %></h1></div>
+    
+    <div class="wrapper">
+        <div class="title-text">
+          <div class="title login">Login Form</div>
+          <div class="title signup">Signup Form</div>
+        </div>
+        <div class="form-container">
+          <div class="slide-controls">
+            <input type="radio" name="slide" id="login" checked>
+            <input type="radio" name="slide" id="signup">
+            <label for="login" class="slide login">Login</label>
+            <label for="signup" class="slide signup">Signup</label>
+            <div class="slider-tab"></div>
+          </div>
+          <div class="form-inner">
+            <form  action="http://localhost:3001/login" method="post"class="login">
+              <div class="field">
+                <input name="reg" type="text" placeholder="Enter reg number caps" required>
+              </div>
+              <div class="field">
+                <input name="pass" type="password" placeholder="Password" required>
+              </div>
+              <div class="pass-link"><a href="#">Forgot password?</a></div>
+              <div class="field btn">
+                <div class="btn-layer"></div>
+                <input type="submit" value="Login">
+              </div>
+              <div class="signup-link">Not a member? <a href="">Signup now</a></div>
+            </form>
+            <form action="http://localhost:3001/register" method="post" class="signup">
+              <div class="field">
+              <!-- Dropdown input for category selection -->
+        <label for="category">Role:</label>
+        <select id="category" name="role" required>
+            <option value="student">student</option>
+            <option value="registra">registra</option>
+            <option value="chairit">chairit</option>
+            <option value="chairchem">chairchem</option>
+            <option value="hostel">hostel</option>
+            <option value="librarian">librarian</option>
+            <option value="deen">deen</option>
+            <option value="finance">finance</option>
+            <!-- Add more options as needed -->
+        </select>
+              </div>
+              <div class="field">
+                <input  name="reg" type="text" placeholder="registration number" required>
+              </div> 
+              <div class="field">
+                <input  name="name" type="text" placeholder="your name" required>
+              </div>
+              <div class="field">
+                <input name="pass" type="password" placeholder="create your password" required>
+              </div>
+              <div class="field btn">
+                <div class="btn-layer"></div>
+                <input type="submit" value="Signup">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+      <script>
+        const loginText = document.querySelector(".title-text .login");
+        const loginForm = document.querySelector("form.login");
+        const loginBtn = document.querySelector("label.login");
+        const signupBtn = document.querySelector("label.signup");
+        const signupLink = document.querySelector("form .signup-link a");
+        signupBtn.onclick = (()=>{
+          loginForm.style.marginLeft = "-50%";
+          loginText.style.marginLeft = "-50%";
+        });
+        loginBtn.onclick = (()=>{
+          loginForm.style.marginLeft = "0%";
+          loginText.style.marginLeft = "0%";
+        });
+        signupLink.onclick = (()=>{
+          signupBtn.click();
+          return false;
+        });
+      </script>
+
+
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>
