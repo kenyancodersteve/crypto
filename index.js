@@ -38,6 +38,12 @@ app.get('/', (req, res) => {
 });
 
 
+
+
+
+
+
+
 // Function to handle login
 async function handleLogin(req, res, loginData) {
     const reg = loginData.reg;
@@ -116,7 +122,7 @@ app.get('/registra', (req, res) => {
 
         // User is signed in
         // res.send(`Welcome, ${req.session.user.username}!`);
-        res.render('registra', { title: 'Registra Dashbord ' });
+        res.render('registra', { title: 'Registra Dashbord ' , result : "Assign digital signatures in"});
         }
         else{
             res.redirect('/menu'); // Redirect to sign-in page
@@ -153,7 +159,7 @@ app.get('/hostel', (req, res) => {
 
             // User is signed in
             // res.send(`Welcome, ${req.session.user.username}!`);
-            res.render('hostel', { title: 'Registra Dashbord ' });
+            res.render('hostel', { title: 'hostel Dashbord ' });
             }
             else{
                 res.redirect('/menu'); // Redirect to sign-in page
@@ -687,7 +693,7 @@ connection.query("SHOW TABLES LIKE 'chemdeptissues'", (error, results, fields) =
      
             // User is signed in
     // res.send(`Welcome, ${req.session.user.username}!`);
-    res.render('chemchair', { title: 'finance Dashbord uncleared students below' ,
+    res.render('chemchair', { title: 'chemistry Dashbord uncleared students below' ,
                             result: result
     
     });
@@ -775,8 +781,34 @@ connection.query("SHOW TABLES LIKE 'libraryissues'", (error, results, fields) =>
 
         // Email already exists, send a response indicating the duplicate
         console.log(results);
-        console.log('reg already exists in the database.');
-        // res.send('reg already exists in the database.');
+        if (results.length === 0) {
+            res.render('itdept', { title: 'chair it Dashbord' ,
+                                  result: `ALL YOUR STUDENTS ARE APPROVED`
+    
+    });
+    
+        }else{
+            // Extract registration numbers
+
+            const result =[]
+
+
+    for (let i = 0; i < results.length; i++) {
+
+        const regNumbers = results.map(student => student['Reg no']);
+
+        result.push(regNumbers);
+        // console.log(numbers[i]);
+      }
+
+     
+            // User is signed in
+    // res.send(`Welcome, ${req.session.user.username}!`);
+    res.render('itdept', { title: 'chair it Dashbord uncleared students below' ,
+                            result: result
+    
+    });
+        }
     } else {
         console.log(results);
     }})
@@ -784,7 +816,7 @@ connection.query("SHOW TABLES LIKE 'libraryissues'", (error, results, fields) =>
 
 // User is signed in
 // res.send(`Welcome, ${req.session.user.username}!`);
-res.render('chemchair', { title: 'Activated Chair It Dashbord' });
+// res.render('chemchair', { title: 'Activated Chair It Dashbord' });
 }
 else{
     res.redirect('/menu'); // Redirect to sign-in page
@@ -801,11 +833,64 @@ else{
 
 
 
+app.post('/registra',(req, res)=>{
 
+    const tableName = 'combined_table';
 
+    // Check if the table already exists
+    const checkTableQuery = `SHOW TABLES LIKE '${tableName}'`;
+    
+    connection.query(checkTableQuery, (error, results, fields) => {
+      if (error) throw error;
+    
+      if (results.length === 0) {
+        // The table does not exist, so create it
+        const createTableQuery = `
+          CREATE TABLE ${tableName} (
+            iv VARCHAR(255),
+            encryptedData VARCHAR(2550)     
 
+            -- Add more columns as needed based on your data types
+          );
+        `;
+    
+        connection.query(createTableQuery, (error, results, fields) => {
+          if (error) throw error;
+    
+          console.log(`${tableName} table created successfully`);
+          insertData();
+        });
+      } else {
+        // The table already exists, do something else or skip creation
+        console.log(`${tableName} table already exists`);
+        connection.end();
+      }
+    });
+    
+    function insertData() {
+      // Insert data into the new table
+      const insertDataQuery = `
+        INSERT INTO ${tableName}
+        SELECT 'itdeptissues' AS source_table, * FROM itdeptissues
+        UNION
+        SELECT 'financeissues' AS source_table, * FROM finance
+        UNION
+        SELECT 'chemdeptissues' AS source_table, * FROM chemdeptissues;
+      `;
+    
+      connection.query(insertDataQuery, (error, results, fields) => {
+        if (error) throw error;
+    
+        console.log('Data inserted into ' + tableName);
+        connection.end();
+      });
+    }
+    
+    res.render('registra', { title: 'Registra Dashbord all done',
+    result : "ALL DONE "
+ });
 
-
+})
 
 
 
@@ -862,8 +947,34 @@ connection.query("SHOW TABLES LIKE 'sportsissues'", (error, results, fields) => 
 
         // Email already exists, send a response indicating the duplicate
         console.log(results);
-        console.log('reg already exists in the database.');
-        // res.send('reg already exists in the database.');
+        if (results.length === 0) {
+            res.render('chem', { title: 'chair chemistry Dashbord' ,
+                                  result: `ALL YOUR STUDENTS ARE APPROVED`
+    
+    });
+    
+        }else{
+            // Extract registration numbers
+
+            const result =[]
+
+
+    for (let i = 0; i < results.length; i++) {
+
+        const regNumbers = results.map(student => student['Reg no']);
+
+        result.push(regNumbers);
+        // console.log(numbers[i]);
+      }
+
+     
+            // User is signed in
+    // res.send(`Welcome, ${req.session.user.username}!`);
+    res.render('chemchair', { title: 'finance Dashbord uncleared students below' ,
+                            result: result
+    
+    });
+        }
     } else {
         console.log(results);
     }})
@@ -871,7 +982,7 @@ connection.query("SHOW TABLES LIKE 'sportsissues'", (error, results, fields) => 
 
 // User is signed in
 // res.send(`Welcome, ${req.session.user.username}!`);
-res.render('chemchair', { title: 'Activated Chair It Dashbord' });
+// res.render('chemchair', { title: 'Activated Chair It Dashbord' });
 }
 else{
     res.redirect('/menu'); // Redirect to sign-in page
@@ -957,16 +1068,20 @@ connection.query("SHOW TABLES LIKE 'financeissues'", (error, results, fields) =>
             // Extract registration numbers
 
             const result =[]
-results.forEach( resssult =>{
 
-     result.push(resssult.map(student => student['Reg no']));
-}) 
 
+    for (let i = 0; i < results.length; i++) {
+
+        const regNumbers = results.map(student => student['Reg no']);
+
+        result.push(regNumbers);
+        // console.log(numbers[i]);
+      }
 
      
             // User is signed in
     // res.send(`Welcome, ${req.session.user.username}!`);
-    res.render('chemchair', { title: 'finance Dashbord uncleared students below' ,
+    res.render('finance', { title: 'finance Dashbord uncleared students below' ,
                             result: result
     
     });
@@ -1057,8 +1172,34 @@ connection.query("SHOW TABLES LIKE 'hostelissues'", (error, results, fields) => 
 
         // Email already exists, send a response indicating the duplicate
         console.log(results);
-        console.log('reg already exists in the database.');
-        // res.send('reg already exists in the database.');
+        if (results.length === 0) {
+            res.render('chem', { title: 'chair chemistry Dashbord' ,
+                                  result: `ALL YOUR STUDENTS ARE APPROVED`
+    
+    });
+    
+        }else{
+            // Extract registration numbers
+
+            const result =[]
+
+
+    for (let i = 0; i < results.length; i++) {
+
+        const regNumbers = results.map(student => student['Reg no']);
+
+        result.push(regNumbers);
+        // console.log(numbers[i]);
+      }
+
+     
+            // User is signed in
+    // res.send(`Welcome, ${req.session.user.username}!`);
+    res.render('chemchair', { title: 'finance Dashbord uncleared students below' ,
+                            result: result
+    
+    });
+        }
     } else {
         console.log(results);
     }})
@@ -1066,7 +1207,7 @@ connection.query("SHOW TABLES LIKE 'hostelissues'", (error, results, fields) => 
 
 // User is signed in
 // res.send(`Welcome, ${req.session.user.username}!`);
-res.render('hostel', { title: 'Activated Hostel It Dashbord' });
+// res.render('hostel', { title: 'Activated Hostel It Dashbord' });
 }
 else{
     res.redirect('/menu'); // Redirect to sign-in page
@@ -1079,7 +1220,6 @@ else{
 
 
 })
-
 
 
 
